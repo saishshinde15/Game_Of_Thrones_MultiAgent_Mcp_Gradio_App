@@ -1,0 +1,85 @@
+ask_personality_questions:
+  description: |
+    Receive the user's responses to all personality questions as input (already collected externally).
+    Do not ask any questions. Simply return the responses as provided in the input context.
+    This task acts as a pass-through to make the responses available for downstream analysis.
+  expected_output: |
+    A complete set of the user's responses to all personality questions, as provided in the input context.
+    Include all answers in a structured format with question numbers or keys.
+  agent: questioner_agent
+
+analyze_character_match:
+  description: |
+    Analyze the user's responses to determine which Game of Thrones character they most resemble.
+    Consider their personality traits, values, and behaviors in your analysis.
+    Be specific about which character they match and why, providing examples from the series.
+    
+    Use the following format for your analysis:
+    - Character Name: [Character's full name]
+    - House/Origin: [Character's house or origin]
+    - Key Traits: [List 3-5 key traits that match the user]
+    - Why They Match: [Detailed explanation of the match]
+    - Notable Similarities: [Specific examples from the series]
+  expected_output: |
+    A detailed analysis of which Game of Thrones character the user most resembles,
+    including specific traits and examples from the series that support the match.
+    
+    Format the output as a dictionary with these keys:
+    - name: Character's full name
+    - house: Character's house or origin
+    - traits: List of key matching traits
+    - description: Detailed explanation of the match
+    - examples: Specific examples from the series
+  agent: character_matcher_agent
+  context: [ask_personality_questions]
+
+analyze_dragon_match:
+  description: |
+    Based on the user's personality traits and the character they resemble,
+    determine which dragon from Game of Thrones would be their perfect match.
+    Explain the reasoning behind the match, including the dragon's traits and history.
+    
+    Use the following format for your analysis:
+    - Dragon Name: [Dragon's name]
+    - Rider: [If applicable, who rode this dragon]
+    - Key Traits: [3-5 key traits of the dragon]
+    - Why They Match: [Detailed explanation of the match]
+    - Notable History: [Key events in the dragon's history]
+  expected_output: |
+    A detailed analysis of which Game of Thrones dragon would be the best match for the user,
+    including the dragon's traits, history, and why it's a good match for the user's personality.
+    
+    Format the output as a dictionary with these keys:
+    - name: Dragon's name
+    - rider: Name of the dragon's rider (if any)
+    - traits: List of key dragon traits
+    - description: Detailed explanation of the match
+    - history: Key events in the dragon's history
+  agent: dragon_matcher_agent
+  context: [analyze_character_match]
+
+present_results:
+  description: |
+    Create an immersive, story-driven reveal of the user's Game of Thrones character and dragon matches.
+    Your goal is to make the user feel like they are part of the world of Westeros.
+    
+    - Begin with a dramatic, personalized introduction as if a Maester or storyteller is revealing their destiny.
+    - Present the character match with a vivid description, including house, traits, and a short in-universe anecdote.
+    - Present the dragon match with a sense of awe and legend, including traits, rider, and a famous moment from the dragon's history.
+    - Explain how the character and dragon complement each other, as if they are destined companions in the saga.
+    - Add a fun fact or secret about each (character and dragon) that only true fans would know.
+    - End with a closing blessing or challenge, in the style of Game of Thrones lore.
+    
+    Make the output highly engaging, creative, and tailored to the user's answers. Use rich language, references, and a touch of humor or drama.
+  expected_output: |
+    A story-like, immersive presentation of the user's Game of Thrones character and dragon matches.
+    
+    Format:
+    - Title: "Your Game of Thrones Destiny Awaits!"
+    - Dramatic introduction
+    - Character match: vivid description, house, traits, in-universe anecdote, fun fact
+    - Dragon match: legendary description, rider, traits, famous moment, fun fact
+    - How they complement each other
+    - Closing blessing or challenge
+  agent: character_matcher_agent
+  context: [analyze_character_match, analyze_dragon_match]

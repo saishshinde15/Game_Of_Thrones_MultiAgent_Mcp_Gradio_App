@@ -1,0 +1,14 @@
+{
+    "servers": {
+        "GoT": {
+            "type": "stdio",
+            "command": "uv",
+            "args": [
+                "--directory",
+                "crewai_gcp",
+                "run",
+                "mcp_server.py"
+            ]
+        }
+    }
+}
